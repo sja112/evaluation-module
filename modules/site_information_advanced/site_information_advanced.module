@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * This module is used to make changes in basic site information form and add new features to it.
+ */
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * hook_form_alter() to update site information form.
+ */
+function site_information_advanced_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'system_site_information_settings') {
+
+    $config = \Drupal::config('system.site');
+
+    // Add new field in site information form.
+    $form['site_api_key'] = [
+      '#type' => 'textfield',
+      '#title' => t('Site API Key'),
+      '#required' => FALSE,
+      '#placeholder' => t('No API Key yet'),
+      '#description' => t('This field is use to add site API key.'),
+      '#default_value' => $config->get('siteapikey'),
+    ];
+
+    // Change site information form submit button text.
+    $form['actions']['submit']['#value'] = t('Update Configuration');
+
+
+    $form['actions']['submit']['#submit'][] = 'site_information_advanced_form_submit';
+  }
+}
+
+function site_information_advanced_form_submit($form, &$form_state) {
+  // Save value of the added field.
+  \Drupal::configFactory()->getEditable('system.site')->set('siteapikey', $form_state->getValue('site_api_key'))->save();
+
+  // To add status message about site api key.
+  drupal_set_message('The configuration options have been saved.');
+  if (!empty($form_state->getValue('site_api_key'))) {
+    drupal_set_message(t('Site API Key ') . $form_state->getValue('site_api_key') . t(' has been saved'));
+  }
+}
