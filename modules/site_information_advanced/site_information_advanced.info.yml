@@ -5,3 +5,5 @@ type: module
 package: Custom
 version: 8.x-dev
 core: '8.x'
+dependencies:
+  - serialization

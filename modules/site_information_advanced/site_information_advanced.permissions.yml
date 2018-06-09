@@ -1,0 +1,4 @@
+site_information_advanced_admin:
+  title: 'Site Information Advanced Module (Admin)'
+  description: 'Site Information Advanced admin access.'
+  restrict access: TRUE
